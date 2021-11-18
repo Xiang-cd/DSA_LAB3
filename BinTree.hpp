@@ -5,4 +5,269 @@
 #ifndef LAB3_BINTREE_HPP
 #define LAB3_BINTREE_HPP
 
+#include "utils.h"
+#include "Queue.hpp"
+#define IsRoot(x) ( ! ( (x).parent ) )
+#define IsLChild(x) ( ! IsRoot(x) && ( & (x) == (x).parent->lc ) )
+#define IsRChild(x) ( ! IsRoot(x) && ( & (x) == (x).parent->rc ) )
+#define HasParent(x) ( ! IsRoot(x) )
+#define HasLChild(x) ( (x).lc )
+#define HasRChild(x) ( (x).rc )
+#define HasChild(x) ( HasLChild(x) || HasRChild(x) ) //至少拥有一个孩子
+#define HasBothChild(x) ( HasLChild(x) && HasRChild(x) ) //同时拥有两个孩子
+#define IsLeaf(x) ( ! HasChild(x) )
+
+#define stature_nor(p) ((p) ? (p)->height : -1)  //普通高度定义
+#define stature_red_black(p) ((p) ? (p)->height : 0)  // 红黑树的高度定义
+
+#define sibling(p) ( IsLChild( * (p) ) ? (p)->parent->rc : (p)->parent->lc ) /*兄弟*/
+#define uncle(x) ( sibling( (x)->parent ) ) /*叔叔*/
+#define FromParentTo(x)  ( IsRoot(x) ? _root : ( IsLChild(x) ? (x).parent->lc : (x).parent->rc ) )
+/*来自父亲的引用*/
+
+
+using namespace std;
+
+template<typename T>
+struct BinNode;
+template<typename T> using Posi = BinNode<T> *;
+
+template<typename T>
+struct BinNode {
+public:
+    T data;
+    Posi<T> parent, lc, rc;
+    bool is_black;
+    int height, npl, size_value;
+
+    int size() {
+        int ans = 1;
+        if (lc)ans += lc->size();
+        if (rc) ans += rc->size();
+        return ans;
+    };
+
+    Posi<T> insertAsLC(T const &e) { return lc = new BinNode(e, this); };
+
+    Posi<T> insertAsRC(T const &e) { return rc = new BinNode(e, this); };
+
+    Posi<T> succ() { // O(h)
+        Posi<T> tmp = this;
+        if (rc) {
+            tmp = rc;
+            while (HasLChild(*tmp)) tmp = tmp->lc;
+        } else {
+            while (IsLChild(*tmp)) tmp = tmp->parent; // 到最左上方， 然后再上一步，
+            tmp = tmp->parent;
+        }
+        return tmp;
+    };
+
+    BinNode() : parent(NULL), lc(NULL), rc(NULL), height(0), npl(1), is_black(true), size_value(1) {}
+
+    BinNode(T e, Posi<T> p = NULL, Posi<T> lc = NULL, Posi<T> rc = NULL, int h = 0, int l = 1, int size_value = 1,
+            bool isblack = true) : data(e), parent(p), lc(lc), rc(rc), height(h), npl(l), size_value(size_value),
+                                   is_black(isblack) {}
+
+
+    template<class VST>
+    void travLevel(VST &visit) {
+        Queue<Posi<T>> Q;
+        Q.enqueue(this);
+        while (!Q.empty()) {
+            Posi<T> x = Q.dequeue();
+            visit(x->data);
+            if (HasLChild(*x)) Q.enqueue(x->lc);
+            if (HasRChild(*x))Q.enqueue(x->rc);
+        }
+    }; //层次遍历
+    template<class VST>
+    void travPre(VST &visit) { travPre_R(this, visit); };//先
+
+    template<class VST>
+    void travIn(VST &visit) { travIn_R(this, visit); };//中
+    template<class VST>
+    void travPost(VST &visit) { travPos_R(this, visit); };//后
+    bool operator<(BinNode const &bn) { return data < bn.data; }
+
+    bool operator==(BinNode const &bn) { return data == bn.data; }
+
+    bool operator<=(BinNode const &bn) { return data <= bn.data; }
+
+    bool operator>(BinNode const &bn) { return data > bn.data; }
+
+    bool operator>=(BinNode const &bn) { return data >= bn.data; }
+
+    Posi<T> zig() {
+        Posi<T> lChild = lc; //为什么可以保证左孩子不为空呢
+        if (!lChild)return this; // 额外加个判断
+        lChild->parent = this->parent;
+        if (lChild->parent) { if (IsLChild(*this))lChild->parent->lc = lChild; else lChild->parent->rc = lChild; }
+        lc = lChild->rc;
+        if (lc) lc->parent = lChild;
+        lChild->rc = this;
+        this->parent = lChild;
+        // 开始更行高度
+        height = 1 + max(stature_nor(lc), stature_nor(rc));
+        lChild->height = 1 + max(stature_nor(lChild->lc), stature_nor(lChild->rc));
+        for (Posi<T> x; x; x = x->parent) {
+            if (x->height == 1 + max(stature_nor(x->lc), stature_nor(x->rc)))break;
+            else x->height = 1 + max(stature_nor(x->lc), stature_nor(x->rc));
+        }
+        return lChild;
+    };
+
+    Posi<T> zag() {
+        Posi<T> Rc = rc;
+        Rc->parent = this->parent;
+        if (Rc->parent) { if (IsLChild(*this)) Rc->parent->lc = Rc; else Rc->parent->rc = Rc; }
+        rc = Rc->lc;
+        if (rc)rc->parent = this;
+        Rc->lc = this;
+        this->parent = Rc;
+        height = 1 + max(stature_nor(lc), stature_nor(rc));
+        Rc->height = 1 + max(stature_nor(Rc->rc), stature_nor(Rc->lc));
+        for (Posi<T> x = Rc->parent; x; x = x->parent) {
+            if (x->height == 1 + max(stature_nor(x->lc), stature_nor(x->rc)))break;
+            else x->height = 1 + max(stature_nor(x->lc), stature_nor(x->rc));
+        }
+        return Rc;
+    };
+//    Posi<T> balance();
+//    Posi<T> imitate(const Posi<T>);
+};
+
+template<typename T, typename VST>
+void travPre_R(Posi<T> x, VST &visit) {
+    if (!x)return;
+    visit(x->data);
+    travPre_R(x->lc, visit);
+    travPre_R(x->rc, visit);
+}
+
+template<typename T, typename VST>
+void travIn_R(Posi<T> x, VST &visit) {
+    if (!x)return;
+    travPre_R(x->lc, visit);
+    visit(x->data);
+    travPre_R(x->rc, visit);
+}
+
+template<typename T, typename VST>
+void travPos_R(Posi<T> x, VST &visit) {
+    if (!x)return;
+    travPre_R(x->lc, visit);
+    travPre_R(x->rc, visit);
+    visit(x->data);
+}
+
+
+template<typename T>
+static int removeAt(Posi<T> x) {
+    if (!x) return 0;
+    int n = 1 + removeAt(x->lc) + removeAt(x->rc);
+    release(x->data);
+    release(x);
+    return n;
+}
+
+template<typename T>
+class BinTree {
+protected:
+    int _size;
+    Posi<T> _root;
+
+    virtual int updateHeight(Posi<T> x) {
+        return x->height = 1 + max(stature_nor(x->lc), stature_nor(x->rc));
+    };
+
+    void updateHeightAbove(Posi<T> x) {
+        //x 本身 的高度也会被更新
+        while (x) {
+            updateHeight(x);
+            x = x->parent;
+        }
+    };
+public:
+    BinTree() : _size(0), _root(NULL) {}
+
+    ~BinTree() { if (0 < _size)remove(_root); }
+
+    int size() const { return _size; }
+
+    bool empty() const { return !_root; }
+
+    Posi<T> root() const { return _root; }
+
+    Posi<T> insert(T const &e) {
+        _size = 1;
+        return _root = new BinNode<T>(e);
+    };
+
+    Posi<T> insert(T const &e, Posi<T> x) {
+        _size++;
+        x->insertAsLC(e);
+        updateHeightAbove(x);
+        return x->lc;
+    };
+
+    Posi<T> insert(Posi<T> x, T const &e) {
+        _size++;
+        x->insertAsRC(e);
+        updateHeightAbove(x);
+        return x->rc;
+    };
+
+    Posi<T> attach(BinTree<T> *&
+    sub_tree, Posi<T> position) {// 使用时候必须保证左孩子为空
+        if (position->lc = sub_tree->_root)position->lc->parent = position; //？？这是看是否赋值成功吗
+        _size += sub_tree->size();
+        updateHeightAbove(position);
+        sub_tree->_root = NULL;
+        sub_tree->_size = 0;
+        release(sub_tree);
+        sub_tree = NULL;
+        return position;
+    };
+
+    Posi<T> attach(Posi<T> position, BinTree<T> *&subtree) {
+        if (position->rc = subtree->_root)position->lc->parent = position;
+        _size += subtree->size();
+        updateHeightAbove(position);
+        subtree->_root = NULL;
+        subtree->_size = 0;
+        release(subtree);
+        subtree = NULL;
+        return position;
+    };
+
+    int remove(Posi<T> x) {
+        FromParentTo(*x) = NULL;
+        updateHeightAbove(x->parent);
+        int n = removeAt(x);
+        _size -= n;
+        return n;
+    };
+
+    BinTree<T> *secede(Posi<T> x) { //子树分离
+        FromParentTo(*x) = NULL;
+        updateHeightAbove(x->parent);
+        BinTree<T> *S = new BinTree<T>();
+        S->_root = x;
+        x->parent = NULL;
+        S->_size = x->size();
+        _size -= S->_size;
+        return S;
+    };
+
+    template<typename VST>
+    void travLevel(VST &visit) { if (_root) _root->travLevel(visit); } //层次遍历
+    template<typename VST>
+    void travPre(VST &visit) { if (_root) _root->travPre(visit); } //先序遍历
+    template<typename VST>
+    void travIn(VST &visit) { if (_root) _root->travIn(visit); } //中序遍历
+    template<typename VST>
+    void travPost(VST &visit) { if (_root) _root->travPost(visit); } //后序遍历
+    // 树的比较算子就不做了
+};
 #endif //LAB3_BINTREE_HPP

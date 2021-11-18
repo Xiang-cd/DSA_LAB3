@@ -80,7 +80,25 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/Users/iMac-2/CLionProjects/LAB3/BST.hpp">
+			<Option target="LAB3"/>
+		</Unit>
+		<Unit filename="/Users/iMac-2/CLionProjects/LAB3/BinTree.hpp">
+			<Option target="LAB3"/>
+		</Unit>
+		<Unit filename="/Users/iMac-2/CLionProjects/LAB3/List.hpp">
+			<Option target="LAB3"/>
+		</Unit>
+		<Unit filename="/Users/iMac-2/CLionProjects/LAB3/Queue.hpp">
+			<Option target="LAB3"/>
+		</Unit>
+		<Unit filename="/Users/iMac-2/CLionProjects/LAB3/Stack.hpp">
+			<Option target="LAB3"/>
+		</Unit>
 		<Unit filename="/Users/iMac-2/CLionProjects/LAB3/main.cpp">
+			<Option target="LAB3"/>
+		</Unit>
+		<Unit filename="/Users/iMac-2/CLionProjects/LAB3/utils.hpp">
 			<Option target="LAB3"/>
 		</Unit>
 		<Unit filename="/Users/iMac-2/CLionProjects/LAB3/CMakeLists.txt">

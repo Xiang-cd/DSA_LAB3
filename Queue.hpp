@@ -5,4 +5,12 @@
 #ifndef LAB3_QUEUE_HPP
 #define LAB3_QUEUE_HPP
 
+
+#include "List.hpp"
+template<typename T> class Queue: public List<T>{
+public:
+    void enqueue(T const& e){ insertAsLast(e);}
+    T dequeue(){return remove(this->first());}
+    T & front(){return this->first()->data;}
+};
 #endif //LAB3_QUEUE_HPP
