@@ -1,5 +1,6 @@
 #include <iostream>
 #include "BinTree.hpp"
+#include "BST.hpp"
 
 using namespace std;
 
@@ -9,10 +10,13 @@ void p(int a){
 
 
 int main() {
-    BinTree<int> a = BinTree<int>();
-    a.insert(50)   ;
-    a.insert(a.root(),100);
-    a.insert(204,a.root());
-    a.travLevel(p  );
+    BST<int> a;
+    a = BST<int>();
+    a.insert(20);
+    a.insert(39);
+    a.insert(2048);
+    a.insert(-149);
+    a.travIn(p);
+    a.travLevel(p);
     return 0;
 }

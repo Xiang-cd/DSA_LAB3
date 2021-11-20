@@ -46,10 +46,10 @@ public:
         return tmp;
     };
 
-    BinNode() : parent(NULL), lc(NULL), rc(NULL), height(0), npl(1), is_black(true), size_value(1) {}
+    BinNode() : parent(NULL), lc(NULL), rc(NULL), height(0), npl(1), is_black(false), size_value(1) {}
 
     BinNode(T e, Posi<T> p = NULL, Posi<T> lc = NULL, Posi<T> rc = NULL, int h = 0, int l = 1, int size_value = 1,
-            bool isblack = true) : data(e), parent(p), lc(lc), rc(rc), height(h), npl(l), size_value(size_value),
+            bool isblack = false) : data(e), parent(p), lc(lc), rc(rc), height(h), npl(l), size_value(size_value),
                                    is_black(isblack) {}
 
 
@@ -156,7 +156,8 @@ static int removeAt(Posi<T> x) {
 
 template<typename T>
 class BinTree {
-protected:
+//protected:
+public:
     int _size;
     Posi<T> _root;
 
@@ -167,7 +168,7 @@ protected:
     void updateHeightAbove(Posi<T> x) {
         //x 本身 的高度也会被更新 修改了
         while (x) {
-            if(x->height== updateHeight(x))break;
+            if (x->height == updateHeight(x))break;
             x = x->parent;
         }
     };
@@ -182,7 +183,7 @@ public:
 
     Posi<T> root() const { return _root; }
 
-    Posi<T> insert(T const &e) {
+    virtual Posi<T> insert(T const &e) {
         _size = 1;
         return _root = new BinNode<T>(e);
     };
@@ -203,7 +204,8 @@ public:
 
     Posi<T> attach(BinTree<T> *&
     sub_tree, Posi<T> position) {// 使用时候必须保证左孩子为空
-        if (position->lc = sub_tree->_root)position->lc->parent = position; //？？这是看是否赋值成功吗
+
+        if ((position->lc = sub_tree->_root))position->lc->parent = position; //？？这是看是否赋值成功吗
         _size += sub_tree->size();
         updateHeightAbove(position);
         sub_tree->_root = NULL;
@@ -214,7 +216,7 @@ public:
     };
 
     Posi<T> attach(Posi<T> position, BinTree<T> *&subtree) {
-        if (position->rc = subtree->_root)position->lc->parent = position;
+        if ((position->rc = subtree->_root))position->lc->parent = position;
         _size += subtree->size();
         updateHeightAbove(position);
         subtree->_root = NULL;
@@ -253,4 +255,5 @@ public:
     void travPost(VST &visit) { if (_root) _root->travPost(visit); } //后序遍历
     // 树的比较算子就不做了
 };
+
 #endif //LAB3_BINTREE_HPP
