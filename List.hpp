@@ -24,7 +24,8 @@ struct ListNode {
     ListNodePosi<T> insertAsPred(T const &e) {
         ListNodePosi<T> x = new ListNode(e, pred, this);
         pred->succ = x;
-        x->pred = x;
+        pred = x;
+        return x;
     };
 
     ListNodePosi<T> insertAsSucc(T const &e) {
@@ -101,7 +102,7 @@ public:
     T remove(ListNodePosi<T> p) {
         T e = p->data;
         p->pred->succ = p->succ;
-        p->succ->pred = p->succ;
+        p->succ->pred = p->pred;
         delete p;
         _size--;
         return e;

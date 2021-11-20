@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/xxy/CLionProjects/DSA/LAB3/BinTree.hpp
+utils.hpp
+/Users/xxy/CLionProjects/DSA/LAB3/utils.hpp
+Queue.hpp
+/Users/xxy/CLionProjects/DSA/LAB3/Queue.hpp
+
+/Users/xxy/CLionProjects/DSA/LAB3/List.hpp
+
+/Users/xxy/CLionProjects/DSA/LAB3/Queue.hpp
+List.hpp
+/Users/xxy/CLionProjects/DSA/LAB3/List.hpp
+
+/Users/xxy/CLionProjects/DSA/LAB3/main.cpp
+iostream
+-
+BinTree.hpp
+/Users/xxy/CLionProjects/DSA/LAB3/BinTree.hpp
+
+/Users/xxy/CLionProjects/DSA/LAB3/utils.hpp
+

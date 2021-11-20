@@ -5,6 +5,25 @@
 #ifndef LAB3_UTILS_HPP
 #define LAB3_UTILS_HPP
 
+#define IsRoot(x) ( ! ( (x).parent ) )
+#define IsLChild(x) ( ! IsRoot(x) && ( & (x) == (x).parent->lc ) )
+#define IsRChild(x) ( ! IsRoot(x) && ( & (x) == (x).parent->rc ) )
+#define HasParent(x) ( ! IsRoot(x) )
+#define HasLChild(x) ( (x).lc )
+#define HasRChild(x) ( (x).rc )
+#define HasChild(x) ( HasLChild(x) || HasRChild(x) ) //至少拥有一个孩子
+#define HasBothChild(x) ( HasLChild(x) && HasRChild(x) ) //同时拥有两个孩子
+#define IsLeaf(x) ( ! HasChild(x) )
+
+#define stature_nor(p) ((p) ? (p)->height : -1)  //普通高度定义
+#define stature_red_black(p) ((p) ? (p)->height : 0)  // 红黑树的高度定义
+
+#define sibling(p) ( IsLChild( * (p) ) ? (p)->parent->rc : (p)->parent->lc ) /*兄弟*/
+#define uncle(x) ( sibling( (x)->parent ) ) /*叔叔*/
+#define FromParentTo(x)  ( IsRoot(x) ? _root : ( IsLChild(x) ? (x).parent->lc : (x).parent->rc ) )
+/*来自父亲的引用*/
+
+
 
 template <typename T> struct Cleaner { // release ？？??release 其实没懂
     static void clean ( T x ) { //相当于递归基

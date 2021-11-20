@@ -5,8 +5,12 @@
 #ifndef LAB3_BST_HPP
 #define LAB3_BST_HPP
 
-#include "BinNode.hpp"
-#include "utils.h"
+#include "BinTree.hpp"
+#include "utils.hpp"
+#include <iostream>
+
+using namespace std;
+
 template<typename T>
 class BST : public BinTree<T> {
 protected:
@@ -29,9 +33,27 @@ protected:
         c->parent = b;
         this->updateHeight(b);
     };
-    Posi<T> rotateAt(Posi<T> x ){
 
+    Posi<T> rotateAt(Posi<T> x) {
+        Posi<T> p = x->parent;
+        Posi<T> g = p->parent;
+        if (!x) cerr << "rotate at null" << endl;
+        if (IsLChild(*x)) {
+
+        } else {
+
+        }
     }
+
+public:
+    virtual Posi<T> &search(const T &e) {
+
+    };
+
+    virtual Posi<T> insert(const T &e);
+
+    virtual Posi<T> remove(const T &e);
+
 };
 
 #endif //LAB3_BST_HPP
