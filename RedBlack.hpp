@@ -65,7 +65,7 @@ protected:
             } else {
                 s->is_black = false;
                 s->height --;
-                if (IsRed(p))p->is_black = true;
+                if (IsRed(p))p->is_black = true; // 尽管转黑了但是黑高度不变因为两个子树的黑高度都减少了1
                 else{
                     p->height--;
                     solveDoubleBlack(p);
@@ -73,7 +73,12 @@ protected:
             }
         } else {
             // 兄弟为红
-
+            s->is_black = true;
+            p->is_black = false;
+            Posi<T> t = IsLChild(*s)? s->lc:s->rc;
+            this->_hot = p;
+            FromParentTo(*p) = this->rotateAt(t);
+            solveDoubleBlack(r);
         }
     };
 
