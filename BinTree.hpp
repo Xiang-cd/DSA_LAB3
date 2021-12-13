@@ -21,7 +21,7 @@ public:
     T data;
     Posi<T> parent, lc, rc;
     bool is_black;
-    int height, npl, size_value;
+    int height;
 
     int size() {
         int ans = 1;
@@ -45,12 +45,23 @@ public:
         }
         return tmp;
     };
+    Posi<T> pre() {
+        Posi<T> tmp = this;
+        if (lc) {
+            tmp = lc;
+            while (HasRChild(*tmp))tmp = tmp->rc;
+        } else {
+            while (IsLChild(*tmp)) tmp = tmp->parent;
+            tmp = tmp->parent;
+        }
+        return tmp;
+    }
 
-    BinNode() : parent(NULL), lc(NULL), rc(NULL), height(0), npl(1), is_black(false), size_value(1) {}
+    BinNode() : parent(NULL), lc(NULL), rc(NULL), height(0), is_black(false) {}
 
-    BinNode(T e, Posi<T> p = NULL, Posi<T> lc = NULL, Posi<T> rc = NULL, int h = 0, int l = 1, int size_value = 1,
-            bool isblack = false) : data(e), parent(p), lc(lc), rc(rc), height(h), npl(l), size_value(size_value),
-                                   is_black(isblack) {}
+    BinNode(T e, Posi<T> p = NULL, Posi<T> lc = NULL, Posi<T> rc = NULL, int h = 0,
+            bool isblack = false) : data(e), parent(p), lc(lc), rc(rc), height(h),
+                                    is_black(isblack) {}
 
 
     template<class VST>
@@ -60,8 +71,18 @@ public:
         while (!Q.empty()) {
             Posi<T> x = Q.dequeue();
             visit(x->data);
-            if (HasLChild(*x)) Q.enqueue(x->lc);
-            if (HasRChild(*x))Q.enqueue(x->rc);
+            if (HasLChild(*x)) {
+                Q.enqueue(x->lc);
+                if (Debug) {
+                    printf("%d lc is %d \n", x->data, x->lc->data);
+                }
+            }
+            if (HasRChild(*x)) {
+                Q.enqueue(x->rc);
+                if (Debug) {
+                    printf("%d rc is %d \n", x->data, x->rc->data);
+                }
+            }
         }
     }; //层次遍历
     template<class VST>
@@ -116,8 +137,6 @@ public:
         }
         return Rc;
     };
-//    Posi<T> balance();
-//    Posi<T> imitate(const Posi<T>);
 };
 
 template<typename T, typename VST>
@@ -131,16 +150,16 @@ void travPre_R(Posi<T> x, VST &visit) {
 template<typename T, typename VST>
 void travIn_R(Posi<T> x, VST &visit) {
     if (!x)return;
-    travPre_R(x->lc, visit);
+    travIn_R(x->lc, visit);
     visit(x->data);
-    travPre_R(x->rc, visit);
+    travIn_R(x->rc, visit);
 }
 
 template<typename T, typename VST>
 void travPos_R(Posi<T> x, VST &visit) {
     if (!x)return;
-    travPre_R(x->lc, visit);
-    travPre_R(x->rc, visit);
+    travPos_R(x->lc, visit);
+    travPos_R(x->rc, visit);
     visit(x->data);
 }
 
@@ -172,7 +191,7 @@ public:
             x = x->parent;
         }
     };
-public:
+
     BinTree() : _size(0), _root(NULL) {}
 
     ~BinTree() { if (0 < _size)remove(_root); }
@@ -202,6 +221,12 @@ public:
         return x->rc;
     };
 
+    inline Posi<T> &from_parent_to(Posi<T> &x) {
+        if (IsRoot(*x)) return _root;
+        else if (x == x->parent->lc) return x->parent->lc;
+        else return x->parent->rc;
+    }
+
     Posi<T> attach(BinTree<T> *&
     sub_tree, Posi<T> position) {// 使用时候必须保证左孩子为空
 
@@ -227,7 +252,7 @@ public:
     };
 
     int remove(Posi<T> x) {
-        FromParentTo(*x) = NULL;
+        this->from_parent_to(x) = NULL;
         updateHeightAbove(x->parent);
         int n = removeAt(x);
         _size -= n;
@@ -235,7 +260,7 @@ public:
     };
 
     BinTree<T> *secede(Posi<T> x) { //子树分离
-        FromParentTo(*x) = NULL;
+        this->from_parent_to(x) = NULL;
         updateHeightAbove(x->parent);
         BinTree<T> *S = new BinTree<T>();
         S->_root = x;

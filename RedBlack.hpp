@@ -7,11 +7,11 @@
 
 #include "BST.hpp"
 
-#define IsBlack(p) ( ! (p) || p->is_black ) //外部节点也视作黑节点
+#define IsBlack(p) ( ! (p) || (p)->is_black ) //外部节点也视作黑节点
 #define IsRed(p) ( ! IsBlack(p) ) //非黑即红
 #define BlackHeightUpdated(x) ( /*RedBlack高度更新条件*/ \
    ( stature_red_black( (x).lc ) == stature_red_black( (x).rc ) ) && \
-   ( (x).height == ( IsRed(& x) ? stature_red_black( (x).lc ) : stature_red_black( (x).lc ) + 1 ) ) \
+   ( (x).height == ( IsRed(&x) ? stature_red_black( (x).lc ) : stature_red_black( (x).lc ) + 1 ) ) \
 )
 
 template<typename T>
@@ -25,6 +25,7 @@ protected:
         }
         Posi<T> p = x->parent;
         if (IsBlack(p))return;
+        if (Debug)cout<<"double rad"<<endl;
         Posi<T> g = p->parent;
         Posi<T> u = uncle(x);
         if (IsBlack(u)) {
@@ -32,7 +33,7 @@ protected:
             else x->is_black = true;
             g->is_black = false;
             Posi<T> gg = g->parent;
-            Posi<T> r = FromParentTo(*g) = this->rotateAt(x);
+            Posi<T> r = this->from_parent_to(g) = this->rotateAt(x);
             r->parent = gg;
         } else{
             // 只需要染色
@@ -86,11 +87,21 @@ protected:
         return x->height = IsBlack ( x ) + max ( stature_red_black( x->lc ), stature_red_black( x->rc ) );
     };
 
+
 public:
+    Posi<T> & search(const T & e){
+        return BST<T>::search(e);
+    }
     Posi<T> insert(const T &e) {
         Posi<T> &x = search(e);
         if (x) return x;
         x = new BinNode<T>(e, this->_hot, NULL, NULL, 0);
+        if (Debug){
+            printf("insert %d\n",x->data);
+            if (this->_root) printf("root %d\n",this->root()->data);
+            if (this->root()->lc)printf("rtlc %d ",this->root()->lc->data);
+            if (this->root()->rc  )printf("rtrc %d \n",this->root()->rc->data) ;
+        }
         Posi<T> oldx = x; // ？？ 为什么又需要记录当前的指针呢
         solveDoubleRed(x);
         return oldx;

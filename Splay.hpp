@@ -38,27 +38,28 @@ protected:
                     attachAsRC(v, p);
                 } else {
 //                    this->connect34(g,v,p,g->lc,v->lc,v->rc,p->rc);
-                    attachAsRC(g, v->lc);
                     attachAsLC(v->rc, p);
+                    attachAsRC(g, v->lc);
                     attachAsLC(g, v);
                     attachAsRC(v, p);
                 }
             } else {
-                if (IsLChild(*p)) {
+                if (IsRChild(*p)) {
 //                    this->connect34(p,v,g,p->lc,v->lc,v->rc,g->rc);
-                    attachAsLC(v->rc, g);
-                    attachAsRC(p, v->lc);
-                    attachAsLC(p, v);
-                    attachAsRC(v, g);
-                } else {
                     attachAsRC(g, p->lc);
                     attachAsRC(p, v->lc);
                     attachAsLC(g, p);
                     attachAsLC(p, v);
+
+                } else {
+                    attachAsRC(p, v->lc);
+                    attachAsLC(v->rc, g);
+                    attachAsRC(v, g);
+                    attachAsLC(p, v);
                 }
             }
             if (!gg) v->parent = NULL;
-            else { if (IsLChild(*g)) attachAsLC(v, gg); else attachAsRC(gg, v); }
+            else { if (g == gg->lc) attachAsLC(v, gg); else attachAsRC(gg, v); }
             this->updateHeight(g);
             this->updateHeight(p);
             this->updateHeight(v);
@@ -82,19 +83,38 @@ protected:
     };
 
 public:
-    Posi<T> &search(const T &e){
-        Posi<T> p = BST<T>::search(e);
-        this->_root = splay(p? p:this->_hot);
+    Posi<T> &search(const T &e) {
+        Posi<T> &p = BST<T>::search(e);
+        this->_root = splay(p ? p : this->_hot);
         return this->_root;
     };
 
-    Posi<T> &insert(const T &e){
-        Posi<T> p = BST<T>::insert(e);
-        this->_root = splay(p);
+    Posi<T> insert(const T &e) {
+        if (!this->_root) {
+            this->_size++;
+            return this->_root = new BinNode<T>(e);
+        }
+        if (e == search(e)->data) return this->_root;
+        this->_size++;
+        Posi<T> t = this->_root;
+        if (this->_root->data < e) {
+            t->parent = this->_root = new BinNode<T>(e, nullptr, t, t->rc);
+            if (HasRChild(*t)) {
+                t->rc->parent = this->_root;
+                t->rc = nullptr;
+            }
+        } else {
+            t->parent = this->_root = new BinNode<T>(e, NULL, t->lc, t);
+            if (HasLChild (*t)) {
+                t->lc->parent = this->_root;
+                t->lc = NULL;
+            }
+        }
+        this->updateHeightAbove(t);
         return this->_root;
     };
 
-    bool remove(const T &e){
+    bool remove(const T &e) {
         bool ans = BST<T>::remove(e);
         splay(this->_hot);
         return ans;

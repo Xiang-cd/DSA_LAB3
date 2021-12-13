@@ -40,9 +40,9 @@ static Posi<T> removeAt(Posi<T> &x, Posi<T> &hot) {
 
 template<typename T>
 class BST : public BinTree<T> {
-protected:
+public:
     Posi<T> _hot;
-
+    Posi<T> hot() {return  _hot;}
     Posi<T> connect34(Posi<T> a, Posi<T> b, Posi<T> c, Posi<T> t0, Posi<T> t1, Posi<T> t2, Posi<T> t3) {
         a->lc = t0;
         if (t0) t0->parent = a;
@@ -56,7 +56,7 @@ protected:
         this->updateHeight(a);
         b->lc = a;
         a->parent = b;
-        a->rc = c;
+        b->rc = c;
         c->parent = b;
         this->updateHeight(b);
         return b;
@@ -76,6 +76,7 @@ protected:
             }
         } else {
             if (IsRChild(*x)) {
+                if (Debug)cout<<"RR"<<endl;
                 p->parent = g->parent;
                 return connect34(g, p, x, g->lc, p->lc, x->lc, x->rc);
             } else {
@@ -91,6 +92,7 @@ public:
     virtual Posi<T> &search(const T &e) {
         if (!this->_root || e == this->_root->data) {
             _hot = NULL;
+            if (Debug)cout<<"no root"<<endl;
             return this->_root;
         }
         for (_hot = this->_root;;) {
@@ -101,7 +103,7 @@ public:
     };
 
     virtual Posi<T> insert(const T &e) {
-        Posi<T> &x = this->search(e);
+        Posi<T> &x = search(e); //???? 这里从this->search 改成 BST::search ,在splay中就对了
         if (x) return x;
         x = new BinNode<T>(e, _hot);
         this->_size++;

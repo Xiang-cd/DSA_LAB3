@@ -6,7 +6,7 @@
 #define LAB3_AVL_HPP
 
 #define Balanced(x) ( stature( (x).lc ) == stature( (x).rc ) ) //理想平衡条件
-#define BalFac(x) ( stature( (x).lc ) - stature( (x).rc ) ) //平衡因子
+#define BalFac(x) ( stature_nor( (x).lc ) - stature_nor( (x).rc ) ) //平衡因子
 #define AvlBalanced(x) ( ( -2 < BalFac(x) ) && ( BalFac(x) < 2 ) ) //AVL平衡条件
 
 #include "BST.hpp"
@@ -15,39 +15,40 @@ template<typename T>
 class AVL : public BST<T> {
 public:
     Posi<T> insert(const T &e) {
-        Posi<T> x = this->search(e);
+        Posi<T> &x = this->search(e);
         if (x) return x;
-        x = new BinNode<T>(e, this->_hot);
         this->_size++;
-        Posi<T> xx = x; //？？为什么这里要记录下这个指针呢，难道旋转之后x不再指向原来的部分了吗
+        Posi<T> xx = x = new BinNode<T>(e, this->_hot);
+        if (Debug)if (this->_hot)cout << "hot " << this->_hot->data << endl;
         for (Posi<T> g = this->_hot; g; g = g->parent) {
             if (!AvlBalanced(*g)) {
-                FromParentTo(*g) = this->rotateAt(this->tallerChild(this->tallerChild(g)));
+                this->from_parent_to(g) = this->rotateAt(tallerChild(tallerChild(g)));
+                if (Debug)cout << "root" << this->_root->data << endl;
                 break; // 平衡一次，必然复原
             } else this->updateHeight(g);
         }
         return xx;
     }
 
-    Posi<T> tallerChild(Posi<T> x) {
-        if (stature_nor(x->lc) > stature_nor(x->rc)) {
-            return x.lc;
-        } else if (stature_nor(x->lc) < stature_nor(x->rc)) {
-            return x->rc;
-        } else {
-            if (IsLChild(*x))return x->lc;
-            else return x->rc;
-        }
-    }
+//    Posi<T> tallerChild(Posi<T> x) {
+//        if (stature_nor(x->lc) > stature_nor(x->rc)) {
+//            return x->lc;
+//        } else if (stature_nor(x->lc) < stature_nor(x->rc)) {
+//            return x->rc;
+//        } else {
+//            if (IsLChild(*x))return x->lc;
+//            else return x->rc;
+//        }
+//    }
 
     bool remove(const T &e) {
-        Posi<T> &x = search(e);
+        Posi<T> &x = this->search(e);
         if (!x) return false;
         removeAt(x, this->_hot);
         this->_size--;
         for (Posi<T> g = this->_hot; g; g = g->parent) {
             if (!AvlBalanced(*g)) {
-                g = FromParentTo(*g) = this->rotateAt(this->tallerChild(this->tallerChild(g)));
+                g = this->from_parent_to(g) = this->rotateAt(tallerChild(tallerChild(g)));
                 continue;
             }
             // 为什么在旋转之后只有旋转子树的根需要更新高度，而别的节点不需要??

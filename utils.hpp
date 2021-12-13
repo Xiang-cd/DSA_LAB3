@@ -20,9 +20,17 @@
 
 #define sibling(p) ( IsLChild( * (p) ) ? (p)->parent->rc : (p)->parent->lc ) /*兄弟*/
 #define uncle(x) ( sibling( (x)->parent ) ) /*叔叔*/
-#define FromParentTo(x)  ( IsRoot(x) ? _root : ( IsLChild(x) ? (x).parent->lc : (x).parent->rc ) )
+#define FromParentTo(x)  ( IsRoot(x) ? this->_root : ( IsLChild(x) ? (x).parent->lc : (x).parent->rc ) )
 /*来自父亲的引用*/
+#define tallerChild(x) ( \
+stature_nor( (x)->lc ) > stature_nor( (x)->rc ) ? (x)->lc : ( /*左高*/ \
+stature_nor( (x)->lc ) < stature_nor( (x)->rc ) ? (x)->rc : ( /*右高*/ \
+IsLChild( * (x) ) ? (x)->lc : (x)->rc /*等高：与父亲x同侧者（zIg-zIg或zAg-zAg）优先*/ \
+) \
+) \
+)
 
+#define Debug false
 
 
 template <typename T> struct Cleaner { // release ？？??release 其实没懂
