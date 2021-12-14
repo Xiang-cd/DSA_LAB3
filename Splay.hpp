@@ -115,9 +115,30 @@ public:
     };
 
     bool remove(const T &e) {
-        bool ans = BST<T>::remove(e);
-        splay(this->_hot);
-        return ans;
+//        bool ans = BST<T>::remove(e);
+//        splay(this->_hot);
+//        return ans;
+        if (!this->root() or (e != search(e)->data))return false;
+        Posi<T> w = this->root();
+        if (!HasLChild(*this->root())){
+            this->_root = this->_root->rc;
+            if (this->root()) this->_root->parent = nullptr;
+        } else if (!HasRChild(*this->root())){
+            this->_root = this->root()->lc;
+            if (this->root())this->_root->parent = nullptr;
+        } else{
+            Posi<T> ltree = this->root()->lc;
+            ltree->parent = nullptr;
+            this->_root->lc = nullptr;
+            this->_root = this->root()->rc; this->_root->parent = nullptr;
+            search(e);
+            this->_root->lc = ltree;
+            ltree->parent = this->_root;
+        }
+        this->_size--;
+        delete w;
+        if (this->_root) this->updateHeight(this->_root);
+        return true;
     };
 
 };

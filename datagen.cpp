@@ -43,11 +43,12 @@ void rand_insert(int num){
 int main(int argc, char *argv[]) {
     if (IDE) {
         freopen("/Users/xxy/CLionProjects/DSA/lab3/input.txt", "w", stdout);
-        cout << 4500 << endl;
+        cout << 6500 << endl;
 //        order_insert(0, 10, 2);
         rand_insert(2000);
-        order_search(0,4000,2);
-        order_remove(0, 1000, 2);
+        order_search(0,3000,2);
+        order_remove(0, 1000,1);
+        order_search(0,2000,1);
 //        order_search(1, 10, 2);
 
     } else {
