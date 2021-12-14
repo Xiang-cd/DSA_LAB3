@@ -71,14 +71,8 @@ public:
         while (!Q.empty()) {
             Posi<T> x = Q.dequeue();
             visit(x->data);
-            if (HasLChild(*x)) {
-                Q.enqueue(x->lc);
-//                if (Debug) printf("%d lc is %d \n", x->data, x->lc->data);
-            }
-            if (HasRChild(*x)) {
-                Q.enqueue(x->rc);
-//                if (Debug) printf("%d rc is %d \n", x->data, x->rc->data);
-            }
+            if (HasLChild(*x)) {Q.enqueue(x->lc);}
+            if (HasRChild(*x)) {Q.enqueue(x->rc);}
         }
     }; //层次遍历
     template<class VST>

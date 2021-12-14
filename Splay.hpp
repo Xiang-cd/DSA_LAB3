@@ -37,7 +37,6 @@ protected:
                     attachAsRC(p, g);
                     attachAsRC(v, p);
                 } else {
-//                    this->connect34(g,v,p,g->lc,v->lc,v->rc,p->rc);
                     attachAsLC(v->rc, p);
                     attachAsRC(g, v->lc);
                     attachAsLC(g, v);
@@ -45,7 +44,6 @@ protected:
                 }
             } else {
                 if (IsRChild(*p)) {
-//                    this->connect34(p,v,g,p->lc,v->lc,v->rc,g->rc);
                     attachAsRC(g, p->lc);
                     attachAsRC(p, v->lc);
                     attachAsLC(g, p);
@@ -140,7 +138,6 @@ public:
         if (this->_root) this->updateHeight(this->_root);
         return true;
     };
-
 };
 
 #endif //LAB3_SPLAY_HPP
