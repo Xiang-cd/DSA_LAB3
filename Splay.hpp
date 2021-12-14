@@ -4,7 +4,7 @@
 
 #ifndef LAB3_SPLAY_HPP
 #define LAB3_SPLAY_HPP
-
+#include <iostream>
 #include "BST.hpp"
 
 template<typename T>
@@ -25,7 +25,7 @@ template<typename T>
 class Splay : public BST<T> {
 protected:
     Posi<T> splay(Posi<T> v) { //将传入的节点伸展至根
-        if (!v) return NULL;
+        if (!v) return nullptr;
         Posi<T> p, g;
         while ((p = v->parent) && (g = p->parent)) {
             Posi<T> gg = g->parent;
@@ -58,7 +58,7 @@ protected:
                     attachAsLC(p, v);
                 }
             }
-            if (!gg) v->parent = NULL;
+            if (!gg) v->parent = nullptr;
             else { if (g == gg->lc) attachAsLC(v, gg); else attachAsRC(gg, v); }
             this->updateHeight(g);
             this->updateHeight(p);
@@ -78,7 +78,7 @@ protected:
             this->updateHeight(p);
             this->updateHeight(v);
         }
-        v->parent = NULL;
+        v->parent = nullptr;
         return v;
     };
 
@@ -104,10 +104,10 @@ public:
                 t->rc = nullptr;
             }
         } else {
-            t->parent = this->_root = new BinNode<T>(e, NULL, t->lc, t);
+            t->parent = this->_root = new BinNode<T>(e, nullptr, t->lc, t);
             if (HasLChild (*t)) {
                 t->lc->parent = this->_root;
-                t->lc = NULL;
+                t->lc = nullptr;
             }
         }
         this->updateHeightAbove(t);

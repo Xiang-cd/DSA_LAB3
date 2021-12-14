@@ -4,7 +4,7 @@
 
 #ifndef LAB3_LIST_HPP
 #define LAB3_LIST_HPP
-
+#include <iostream>
 template<typename T>
 struct ListNode;
 
@@ -18,7 +18,7 @@ struct ListNode {
 
     ListNode() {};
 
-    ListNode(T e, ListNodePosi<T> p = NULL, ListNodePosi<T> s = NULL) :
+    ListNode(T e, ListNodePosi<T> p = nullptr, ListNodePosi<T> s = nullptr) :
             data(e), pred(p), succ(s) {};
 
     ListNodePosi<T> insertAsPred(T const &e) {
@@ -47,9 +47,9 @@ protected:
         header = new ListNode<T>;
         trailer = new ListNode<T>;
         header->succ = trailer;
-        header->pred = NULL;
+        header->pred = nullptr;
         trailer->pred = header;
-        trailer->succ = NULL;
+        trailer->succ = nullptr;
         _size = 0;
     };
 

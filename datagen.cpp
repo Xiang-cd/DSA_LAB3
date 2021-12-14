@@ -3,6 +3,9 @@
 //
 #include <set>
 #include <iostream>
+#include<algorithm>
+#include<cstdio>
+#include<ctime>
 #include <fstream>
 
 using namespace std;
@@ -28,13 +31,23 @@ void order_remove(int start, int end, int step) {
     }
 }
 
+void rand_insert(int num){
+    int * a = new int[num];
+    for (int i = 0; i < num; ++i) a[i] = i;
+    random_shuffle(a,a+ num);
+    for (int i = 0; i < num; ++i) {
+        cout<<"A "<<a[i]<<endl;
+    }
+}
 
 int main(int argc, char *argv[]) {
     if (IDE) {
-        freopen("/Users/xxy/CLionProjects/DSA/LAB3/input.txt", "w", stdout);
-        cout << 20 << endl;
-        order_insert(0, 10, 2);
-        order_remove(0, 10, 2);
+        freopen("/Users/xxy/CLionProjects/DSA/lab3/input.txt", "w", stdout);
+        cout << 4500 << endl;
+//        order_insert(0, 10, 2);
+        rand_insert(2000);
+        order_search(0,4000,2);
+        order_remove(0, 1000, 2);
 //        order_search(1, 10, 2);
 
     } else {

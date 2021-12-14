@@ -4,7 +4,7 @@
 
 #ifndef LAB3_BINTREE_HPP
 #define LAB3_BINTREE_HPP
-
+#include <iostream>
 #include "utils.hpp"
 #include "Queue.hpp"
 
@@ -40,7 +40,7 @@ public:
             tmp = rc;
             while (HasLChild(*tmp)) tmp = tmp->lc;
         } else {
-            while (IsLChild(*tmp)) tmp = tmp->parent; // 到最左上方， 然后再上一步，
+            while (IsRChild(*tmp)) tmp = tmp->parent; // 到最左上方， 然后再上一步，
             tmp = tmp->parent;
         }
         return tmp;
@@ -57,31 +57,27 @@ public:
         return tmp;
     }
 
-    BinNode() : parent(NULL), lc(NULL), rc(NULL), height(0), is_black(false) {}
+    BinNode() : parent(nullptr), lc(nullptr), rc(nullptr), height(0), is_black(false) {}
 
-    BinNode(T e, Posi<T> p = NULL, Posi<T> lc = NULL, Posi<T> rc = NULL, int h = 0,
+    BinNode(T e, Posi<T> p = nullptr, Posi<T> lc = nullptr, Posi<T> rc = nullptr, int h = 0,
             bool isblack = false) : data(e), parent(p), lc(lc), rc(rc), height(h),
                                     is_black(isblack) {}
 
 
     template<class VST>
     void travLevel(VST &visit) {
-        Queue<Posi<T>> Q;
+        Queue<Posi<T> > Q;
         Q.enqueue(this);
         while (!Q.empty()) {
             Posi<T> x = Q.dequeue();
             visit(x->data);
             if (HasLChild(*x)) {
                 Q.enqueue(x->lc);
-                if (Debug) {
-                    printf("%d lc is %d \n", x->data, x->lc->data);
-                }
+//                if (Debug) printf("%d lc is %d \n", x->data, x->lc->data);
             }
             if (HasRChild(*x)) {
                 Q.enqueue(x->rc);
-                if (Debug) {
-                    printf("%d rc is %d \n", x->data, x->rc->data);
-                }
+//                if (Debug) printf("%d rc is %d \n", x->data, x->rc->data);
             }
         }
     }; //层次遍历
@@ -192,7 +188,7 @@ public:
         }
     };
 
-    BinTree() : _size(0), _root(NULL) {}
+    BinTree() : _size(0), _root(nullptr) {}
 
     ~BinTree() { if (0 < _size)remove(_root); }
 
@@ -233,10 +229,10 @@ public:
         if ((position->lc = sub_tree->_root))position->lc->parent = position; //？？这是看是否赋值成功吗
         _size += sub_tree->size();
         updateHeightAbove(position);
-        sub_tree->_root = NULL;
+        sub_tree->_root = nullptr;
         sub_tree->_size = 0;
         release(sub_tree);
-        sub_tree = NULL;
+        sub_tree = nullptr;
         return position;
     };
 
@@ -244,15 +240,15 @@ public:
         if ((position->rc = subtree->_root))position->lc->parent = position;
         _size += subtree->size();
         updateHeightAbove(position);
-        subtree->_root = NULL;
+        subtree->_root = nullptr;
         subtree->_size = 0;
         release(subtree);
-        subtree = NULL;
+        subtree = nullptr;
         return position;
     };
 
     int remove(Posi<T> x) {
-        this->from_parent_to(x) = NULL;
+        this->from_parent_to(x) = nullptr;
         updateHeightAbove(x->parent);
         int n = removeAt(x);
         _size -= n;
@@ -260,11 +256,11 @@ public:
     };
 
     BinTree<T> *secede(Posi<T> x) { //子树分离
-        this->from_parent_to(x) = NULL;
+        this->from_parent_to(x) = nullptr;
         updateHeightAbove(x->parent);
         BinTree<T> *S = new BinTree<T>();
         S->_root = x;
-        x->parent = NULL;
+        x->parent = nullptr;
         S->_size = x->size();
         _size -= S->_size;
         return S;

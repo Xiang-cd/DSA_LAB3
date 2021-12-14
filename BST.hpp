@@ -14,13 +14,17 @@ using namespace std;
 template<typename T>
 static Posi<T> removeAt(Posi<T> &x, Posi<T> &hot) {
     Posi<T> w = x;
-    Posi<T> succ = NULL;
+    Posi<T> succ = nullptr;
     if (!HasLChild(*x)) {
         x = x->rc;
         succ = x;
-    } else if (!HasLChild(*x)) succ = x = x->lc;
+    } else if (!HasRChild(*x)) succ = x = x->lc;
     else {
+        if (Debug){
+            printf("before %d ",w->data );
+        }
         w = w->succ();
+        if (Debug){printf("after %d \n",w->data );}
         T tmp = x->data;
         x->data = w->data;
         w->data = tmp;
@@ -33,8 +37,9 @@ static Posi<T> removeAt(Posi<T> &x, Posi<T> &hot) {
     }
     hot = w->parent;
     if (succ) succ->parent = hot;
-    release(w->data);
-    release(w);
+//    release(w->data);
+//    release(w);
+    delete w;
     return succ;
 }
 
@@ -53,7 +58,7 @@ public:
         if (t2)t2->parent = c;
         c->rc = t3;
         if (t3)t3->parent = c;
-        this->updateHeight(a);
+        this->updateHeight(c);
         b->lc = a;
         a->parent = b;
         b->rc = c;
@@ -76,7 +81,6 @@ public:
             }
         } else {
             if (IsRChild(*x)) {
-                if (Debug)cout<<"RR"<<endl;
                 p->parent = g->parent;
                 return connect34(g, p, x, g->lc, p->lc, x->lc, x->rc);
             } else {
@@ -91,8 +95,8 @@ public:
 
     virtual Posi<T> &search(const T &e) {
         if (!this->_root || e == this->_root->data) {
-            _hot = NULL;
-            if (Debug)cout<<"no root"<<endl;
+            _hot = nullptr;
+            if (Debug)cout<<"no root or find root"<<endl;
             return this->_root;
         }
         for (_hot = this->_root;;) {

@@ -4,7 +4,7 @@
 
 #ifndef LAB3_UTILS_HPP
 #define LAB3_UTILS_HPP
-
+#include <iostream>
 #define IsRoot(x) ( ! ( (x).parent ) )
 #define IsLChild(x) ( ! IsRoot(x) && ( & (x) == (x).parent->lc ) )
 #define IsRChild(x) ( ! IsRoot(x) && ( & (x) == (x).parent->rc ) )
@@ -29,9 +29,9 @@ IsLChild( * (x) ) ? (x)->lc : (x)->rc /*等高：与父亲x同侧者（zIg-zIg�
 ) \
 ) \
 )
-
+//#define _DEBUG
 #define Debug false
-
+#include <string.h>
 
 template <typename T> struct Cleaner { // release ？？??release 其实没懂
     static void clean ( T x ) { //相当于递归基
@@ -39,7 +39,7 @@ template <typename T> struct Cleaner { // release ？？??release 其实没懂
         static int n = 0;
       if ( 7 > strlen ( typeid ( T ).name() ) ) { //复杂类型一概忽略，只输出基本类型
          printf ( "\t<%s>[%d]=", typeid ( T ).name(), ++n );
-         print ( x );
+//         print ( x );
          printf ( " purged\n" );
       }
 #endif

@@ -30,7 +30,7 @@ using namespace std;
 template<typename T>
 static Posi<T> removeAt(Posi<T> &x, Posi<T> &hot) {
     Posi<T> w = x;
-    Posi<T> succ = NULL;
+    Posi<T> succ = nullptr;
     if (!HasLChild(*x)) {
         x = x->rc;
         succ = x;
@@ -105,7 +105,7 @@ class BST : public BinTree<T> {
 
         virtual Posi<T> &search(const T &e) {
             if (!this->_root || e == this->_root->data) {
-                _hot = NULL;
+                _hot = nullptr;
                 return this->_root;
             }
             for (_hot = this->_root;;) {
@@ -176,8 +176,8 @@ class Splay : public BST<T> {
                 }
             }
         }
-        Posi<T> splay(Posi<T> v, Posi<T> top = NULL) { //将传入的节点伸展至根
-            if (!v) return NULL;
+        Posi<T> splay(Posi<T> v, Posi<T> top = nullptr) { //将传入的节点伸展至根
+            if (!v) return nullptr;
             Posi<T> p, g;
             while ((p = v->parent) != top && (g = p->parent) != top) {
                 Posi<T> gg = g->parent;
@@ -209,7 +209,7 @@ class Splay : public BST<T> {
                         attachAsLC(p, v);
                     }
                 }
-                if (!gg) v->parent = NULL;
+                if (!gg) v->parent = nullptr;
                 else { if (IsLChild(*g)) attachAsLC(v, gg); else attachAsRC(gg, v); }
                 this->updateHeight(g);
                 this->updateHeight(p);
@@ -232,7 +232,7 @@ class Splay : public BST<T> {
                 this->updateHeight(p);
                 this->updateHeight(v);
             }
-            v->parent = NULL;
+            v->parent = nullptr;
             return v;
         };
 
@@ -255,7 +255,7 @@ class Splay : public BST<T> {
 
         bool remove(const T &e){
             pushdown();
-            //TODO:splay(pre,NULL),splay(suc,pre)
+            //TODO:splay(pre,nullptr),splay(suc,pre)
             //then remove pre->rc->lc(==suc->lc)
             //splay(this->_hot);
             return ans;

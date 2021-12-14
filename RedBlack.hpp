@@ -4,7 +4,7 @@
 
 #ifndef LAB3_REDBLACK_HPP
 #define LAB3_REDBLACK_HPP
-
+#include <iostream>
 #include "BST.hpp"
 
 #define IsBlack(p) ( ! (p) || (p)->is_black ) //外部节点也视作黑节点
@@ -48,14 +48,15 @@ protected:
 
     void solveDoubleBlack(Posi<T> r){
         Posi<T> p = r ? r->parent : this->_hot;
+        if (!p) return;
         Posi<T> s = (r == p->lc) ? p->rc:p->lc;
         if (IsBlack(s)) {
-            Posi<T> t = NULL;
+            Posi<T> t = nullptr;
             if (IsRed(s->rc)) t = s->rc;
             if (IsRed(s->lc)) t = s->lc;
             if (t) { // BB1 黑兄弟有红孩子
                 bool origin_parent_color = p->is_black;
-                Posi<T> b = FromParentTo(*p) = this->rotateAt(t); //??照理说这里应该不会出现没有孩子的情况
+                Posi<T> b = this->from_parent_to(p) = this->rotateAt(t); //??照理说这里应该不会出现没有孩子的情况
                 if (HasLChild(*b)   ){b->lc->is_black = true;
                     updateHeight(b->lc);}
                 if (HasRChild(*b)){b->rc->is_black = true;
@@ -78,7 +79,7 @@ protected:
             p->is_black = false;
             Posi<T> t = IsLChild(*s)? s->lc:s->rc;
             this->_hot = p;
-            FromParentTo(*p) = this->rotateAt(t);
+            this->from_parent_to(p) = this->rotateAt(t);
             solveDoubleBlack(r);
         }
     };
@@ -95,13 +96,7 @@ public:
     Posi<T> insert(const T &e) {
         Posi<T> &x = search(e);
         if (x) return x;
-        x = new BinNode<T>(e, this->_hot, NULL, NULL, 0);
-        if (Debug){
-            printf("insert %d\n",x->data);
-            if (this->_root) printf("root %d\n",this->root()->data);
-            if (this->root()->lc)printf("rtlc %d ",this->root()->lc->data);
-            if (this->root()->rc  )printf("rtrc %d \n",this->root()->rc->data) ;
-        }
+        x = new BinNode<T>(e, this->_hot, nullptr, nullptr, 0);
         Posi<T> oldx = x; // ？？ 为什么又需要记录当前的指针呢
         solveDoubleRed(x);
         return oldx;
