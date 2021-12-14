@@ -4,6 +4,7 @@
 
 #ifndef LAB3_BINTREE_HPP
 #define LAB3_BINTREE_HPP
+
 #include <iostream>
 #include "utils.hpp"
 #include "Queue.hpp"
@@ -45,6 +46,7 @@ public:
         }
         return tmp;
     };
+
     Posi<T> pre() {
         Posi<T> tmp = this;
         if (lc) {
@@ -71,8 +73,8 @@ public:
         while (!Q.empty()) {
             Posi<T> x = Q.dequeue();
             visit(x->data);
-            if (HasLChild(*x)) {Q.enqueue(x->lc);}
-            if (HasRChild(*x)) {Q.enqueue(x->rc);}
+            if (HasLChild(*x)) { Q.enqueue(x->lc); }
+            if (HasRChild(*x)) { Q.enqueue(x->rc); }
         }
     }; //层次遍历
     template<class VST>
@@ -184,7 +186,8 @@ public:
 
     BinTree() : _size(0), _root(nullptr) {}
 
-    ~BinTree() { if (0 < _size)remove(_root); }
+    ~BinTree() { // if (0 < _size)remove(_root);
+    }
 
     int size() const { return _size; }
 
