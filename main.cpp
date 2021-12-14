@@ -6,8 +6,8 @@
 #include "Splay.hpp"
 #include "RedBlack.hpp"
 
-#define Time true
-#define IDE true
+#define Time false
+#define IDE false
 
 using namespace std;
 int n;
@@ -28,40 +28,26 @@ int main(int argc, char *argv[]) {
         a = new AVL<int>();
     } else {
         freopen(argv[1], "r", stdin);
-        freopen(argv[2], "r", stdout);
+        freopen(argv[2], "w", stdout);
         if (argv[3][0] == '0') {
-
+            a = new AVL<int>();
         } else if (argv[3][0] == '1') {
             a = new Splay<int>();
         } else if (argv[3][0] == '2') {
-
+            a = new RedBlack<int>();
         }
     }
-
 #endif
+
     scanf("%d", &n);
     char type;
     int num;
     for (int i = 0; i < n; ++i) {
-        if (Debug)cout << "i " << i << endl;
         cin >> type >> num;
         if (type == 'A') {
-            if (Debug)cout << "ins" << num << endl;
             a->insert(num);
-            if (Debug) {
-//                a->travLevel(p);
-//                cout << endl;
-                a->travIn(p);
-                cout << endl;
-            }
         } else if (type == 'B') {
-            if (Debug)cout << "delete " << num << endl;
             a->remove(num);
-            if (Debug) {
-//                a->travLevel(p);
-                a->travIn(p);
-                cout << endl;
-            }
         } else {
             auto find = a->search(num);
             if (find) {
@@ -89,7 +75,6 @@ int main(int argc, char *argv[]) {
             }
         }
     }
-    if (Debug)a->travLevel(p);
     if (Time) {
         endT = clock();
         printf("cost %f\n", (float) (float(endT - startT) / CLOCKS_PER_SEC));
