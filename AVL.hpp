@@ -45,7 +45,6 @@ public:
         Posi<T> &x = this->search(e);
         if (!x) return false;
         removeAt(x, this->_hot);
-//        if(Debug){cout<<this->root()->data<<endl;}
         this->_size--;
         for (Posi<T> g = this->_hot; g; g = g->parent) {
             if (!AvlBalanced(*g)) {

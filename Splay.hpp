@@ -48,7 +48,6 @@ protected:
                     attachAsRC(p, v->lc);
                     attachAsLC(g, p);
                     attachAsLC(p, v);
-
                 } else {
                     attachAsRC(p, v->lc);
                     attachAsLC(v->rc, g);

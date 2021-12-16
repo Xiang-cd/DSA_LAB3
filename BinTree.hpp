@@ -177,9 +177,8 @@ public:
     };
 
     void updateHeightAbove(Posi<T> x) {
-        //x 本身 的高度也会被更新 修改了
         while (x) {
-            if (x->height == updateHeight(x))break;
+            if (x->height == updateHeight(x))break; // 高度不变后, 祖先不必更新
             x = x->parent;
         }
     };
@@ -214,7 +213,7 @@ public:
         return x->rc;
     };
 
-    inline Posi<T> &from_parent_to(Posi<T> &x) {
+    inline Posi<T> &from_parent_to(Posi<T> &x) { //需要返回引用
         if (IsRoot(*x)) return _root;
         else if (x == x->parent->lc) return x->parent->lc;
         else return x->parent->rc;

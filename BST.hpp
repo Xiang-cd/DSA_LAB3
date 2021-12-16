@@ -20,11 +20,7 @@ static Posi<T> removeAt(Posi<T> &x, Posi<T> &hot) {
         succ = x;
     } else if (!HasRChild(*x)) succ = x = x->lc;
     else {
-        if (Debug){
-            printf("before %d ",w->data );
-        }
         w = w->succ();
-        if (Debug){printf("after %d \n",w->data );}
         T tmp = x->data;
         x->data = w->data;
         w->data = tmp;
@@ -94,12 +90,11 @@ public:
     BST() : BinTree<T>() {};
 
     virtual Posi<T> &search(const T &e) {
-        if (!this->_root || e == this->_root->data) {
+        if (!this->_root || e == this->_root->data) {// 处理退化情况
             _hot = nullptr;
-            if (Debug)cout<<"no root or find root"<<endl;
             return this->_root;
         }
-        for (_hot = this->_root;;) {
+        for (_hot = this->_root;;) { // 二叉搜索
             Posi<T> &v = (e < _hot->data) ? _hot->lc : _hot->rc;
             if (!v || e == v->data) return v;
             _hot = v;
@@ -107,19 +102,19 @@ public:
     };
 
     virtual Posi<T> insert(const T &e) {
-        Posi<T> &x = search(e); //???? 这里从this->search 改成 BST::search ,在splay中就对了
-        if (x) return x;
-        x = new BinNode<T>(e, _hot);
+        Posi<T> &x = search(e); //先搜索
+        if (x) return x;       // 如果存在则直接返回
+        x = new BinNode<T>(e, _hot); // 否则新建节点
         this->_size++;
         this->updateHeightAbove(x);
         return x;
     };
 
     virtual bool remove(const T &e) {
-        Posi<T> &x = this->search(e);
-        if (!x) return false;
-        removeAt(x, _hot);
-        this->_size--;
+        Posi<T> &x = this->search(e); //先搜索
+        if (!x) return false;    //未找到则返回
+        removeAt(x, _hot);      //删除节点(包含后继交换等内容)
+        this->_size--;          //更新信息
         this->updateHeightAbove(_hot);
         return true;
     };

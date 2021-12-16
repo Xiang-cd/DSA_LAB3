@@ -35,8 +35,7 @@ protected:
             Posi<T> gg = g->parent;
             Posi<T> r = this->from_parent_to(g) = this->rotateAt(x);
             r->parent = gg;
-        } else{
-            // 只需要染色
+        } else{ // 只需要染色
             p->is_black = true;
             p->height++;
             u->is_black = true;

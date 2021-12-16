@@ -35,7 +35,6 @@ void rand_insert(int num) {
         cout << "A " << a[i] << endl;
     }
     delete[]a;
-
 }
 
 void rand_search(int num) {
@@ -60,37 +59,41 @@ void rand_remove(int num) {
 
 int main(int argc, char *argv[]) {
     if (IDE) {
-        freopen("/Users/xxy/CLionProjects/DSA/lab3/input.txt", "w", stdout);
+        freopen("/Users/xxy/CLionProjects/DSA/lab3/input2.txt", "w", stdout);
         cout << 2000000 << endl;
         order_insert(0, 1000000, 1);
-        order_search(0, 1000000, 1);
+        rand_search(1000000);
     } else {
         freopen(argv[1], "w", stdout);
         if (argv[2][0] == '0') { //顺序插入，顺序查找
-            cout << 2000000 << endl;
-            order_insert(0, 1000000, 1);
-            order_search(0, 1000000, 1);
+            cout << 4000000 << endl;
+            order_insert(0, 2000000, 1);
+            order_search(0, 2000000, 1);
         } else if (argv[2][0] == '1') { // 顺序插入，逆序查找
-            cout << 2000000 << endl;
-            order_insert(0, 1000000, 1);
-            order_search(1000000, 0, -1);
+            cout << 4000000 << endl;
+            order_insert(0, 2000000, 1);
+            order_search(2000000, 0, -1);
         } else if (argv[2][0] == '2') { // 顺序插入，正顺逆序各一次查找
-            cout << 3000000 << endl;
-            order_insert(0, 1000000, 1);
-            order_search(0, 1000000, 1);
-            order_search(1000000, 0, -1);
-        } else if (argv[2][0] == '3') {// 随机插入，随机查找
-            cout << 2000000 << endl;
-            rand_insert(1000000);
-            rand_search(1000000);
-        } else if (argv[2][0] == '4') { // 随机插入，随机删除
-            cout << 2000000 << endl;
-            rand_insert(1000000);
-            rand_remove(1000000);
-        } else if (argv[2][0] == '5') { // 顺序插入，顺序删除
-            cout << 2000000 << endl;
-            order_insert(0, 1000000, 1);
-            order_remove(0, 1000000, 1);
+            cout << 6000000 << endl;
+            order_insert(0, 2000000, 1);
+            order_search(0, 2000000, 1);
+            order_search(2000000, 0, -1);
+        } else if (argv[2][0] == '3') { // 顺序插入，顺序删除
+            cout << 4000000 << endl;
+            order_insert(0, 2000000, 1);
+            order_remove(0, 2000000, 1);
+        } else if (argv[2][0]=='4'){ //  顺序插入,随机查找
+            cout << 4000000 << endl;
+            order_insert(0, 2000000, 1);
+            rand_search(2000000);
+        }else if (argv[2][0] == '5') {// 随机插入，随机查找
+            cout << 4000000 << endl;
+            rand_insert(2000000);
+            rand_search(2000000);
+        } else if (argv[2][0] == '6') { // 随机插入，随机删除
+            cout << 4000000 << endl;
+            rand_insert(2000000);
+            rand_remove(2000000);
         }
     }
 
