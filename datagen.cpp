@@ -60,9 +60,10 @@ void rand_remove(int num) {
 int main(int argc, char *argv[]) {
     if (IDE) {
         freopen("/Users/xxy/CLionProjects/DSA/lab3/input2.txt", "w", stdout);
-        cout << 2000000 << endl;
-        order_insert(0, 1000000, 1);
-        rand_search(1000000);
+        cout << 150 << endl;
+        rand_insert(50);
+        rand_search(50);
+        rand_remove(50);
     } else {
         freopen(argv[1], "w", stdout);
         if (argv[2][0] == '0') { //顺序插入，顺序查找
